@@ -22,6 +22,12 @@ RUN apt-get update && apt-get install -y \
     make \
     cmake \
     tzdata \
+    texlive-latex-base \
+    texlive-latex-extra \
+    texlive-fonts-recommended \
+    texlive-fonts-extra \
+    texlive-xetex \
+    pandoc \
     && apt-get clean
 
 # Download and install TA-Lib from source
@@ -74,4 +80,5 @@ EXPOSE 8888
 CMD ["bash", "-i", "-c", \
      "source /opt/conda/etc/profile.d/conda.sh && \
      conda activate vectorbtpro && \
-     jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root"]
+     jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root \
+     --NotebookApp.token='' --NotebookApp.password=''"]
