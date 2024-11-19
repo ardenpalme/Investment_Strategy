@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     make \
     cmake \
     tzdata \
+    chromium-browser \
     texlive-latex-base \
     texlive-latex-extra \
     texlive-fonts-recommended \
