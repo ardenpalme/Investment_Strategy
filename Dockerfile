@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     liblzma-dev \
     make \
     cmake \
+    tzdata \
     && apt-get clean
 
 # Download and install TA-Lib from source
@@ -59,8 +60,12 @@ ARG GITHUB_USERNAME
 RUN --mount=type=secret,id=github_token \
     GITHUB_TOKEN=$(cat /run/secrets/github_token) && \
     source /opt/conda/etc/profile.d/conda.sh && conda activate vectorbtpro && \
-    pip install --upgrade pip wheel jupyter notebook plotly dash && \
+    pip install --upgrade pip wheel jupyter notebook plotly dash kaleido polygon-api-client && \
     pip install -U "vectorbtpro[base] @ git+https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/polakowo/vectorbt.pro.git"
+
+RUN --mount=type=secret,id=polygon_api_key \
+    export API_KEY=$(cat /run/secrets/polygon_api_key) && \
+    echo "export POLYGON_API_KEY=$API_KEY" >> ~/.bashrc
 
 # Expose Jupyter Notebook port
 EXPOSE 8888

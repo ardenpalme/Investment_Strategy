@@ -1,3 +1,4 @@
 .github_token
+.polygon_api_key
 .ipynb_checkpoints
-my_data.h5
+*.h5

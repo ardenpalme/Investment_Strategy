@@ -7,6 +7,9 @@ services:
         GITHUB_USERNAME: ardenpalme
       secrets:
         - github_token
+        - polygon_api_key
+    environment:
+      - TZ=UTC
     ports:
       - "8888:8888"
     volumes:
@@ -17,3 +20,5 @@ services:
 secrets:
   github_token:
     file: .github_token
+  polygon_api_key:
+    file: .polygon_api_key
