@@ -23,14 +23,17 @@ RUN apt-get update && apt-get install -y \
     tzdata \
     && apt-get clean
 
+# Download, extract, build, and install TA-Lib
 RUN wget https://sourceforge.net/projects/ta-lib/files/ta-lib/0.4.0/ta-lib-0.4.0-src.tar.gz && \
     tar -xzf ta-lib-0.4.0-src.tar.gz && \
     cd ta-lib && \
-    ./configure --prefix=/usr && \
+    ./configure --prefix=/usr/local && \
     make && \
     make install && \
-    cd .. && \
-    rm -rf ta-lib ta-lib-0.4.0-src.tar.gz
+    cd .. && rm -rf ta-lib ta-lib-0.4.0-src.tar.gz
+
+# Ensure TA-Lib is available for Python to find
+ENV LD_LIBRARY_PATH="/usr/lib:/usr/local/lib:${LD_LIBRARY_PATH}"
 
 #  Miniconda
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
@@ -51,8 +54,8 @@ ARG GITHUB_USERNAME
 RUN --mount=type=secret,id=github_token \
     GITHUB_TOKEN=$(cat /run/secrets/github_token) && \
     source /opt/conda/etc/profile.d/conda.sh && conda activate vectorbtpro && \
-    pip install --upgrade pip wheel jupyter notebook plotly dash kaleido polygon-api-client && \
-    pip install -U "vectorbtpro[base] @ git+https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/polakowo/vectorbt.pro.git"
+    pip install --upgrade pip wheel jupyter notebook plotly dash kaleido polygon-api-client mistune nbconvert && \
+    pip install -U "vectorbtpro[base-no-talib] @ git+https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/polakowo/vectorbt.pro.git"
 
 RUN --mount=type=secret,id=polygon_api_key \
     export API_KEY=$(cat /run/secrets/polygon_api_key) && \
